@@ -11,6 +11,7 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
+
 //==============================================================================
 GainTutorialAudioProcessor::GainTutorialAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -21,9 +22,12 @@ GainTutorialAudioProcessor::GainTutorialAudioProcessor()
                       #endif
                        .withOutput ("Output", AudioChannelSet::stereo(), true)
                      #endif
-                       )
+                       ),
+                      gainValue(-53.0f), treeState(*this, nullptr)
 #endif
 {
+	NormalisableRange<float> gainRange{ -53.0f, 0.0f };
+	treeState.createAndAddParameter(GAIN_ID, GAIN_NAME, GAIN_NAME, gainRange, -53.0f, nullptr, nullptr);
 }
 
 GainTutorialAudioProcessor::~GainTutorialAudioProcessor()
@@ -158,7 +162,7 @@ void GainTutorialAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiB
 
 		for(int sample = 0; sample < buffer.getNumSamples(); ++sample)
 		{
-			channelData[sample] = buffer.getSample(channel, sample) * rawVolume;
+			channelData[sample] = buffer.getSample(channel, sample) * pow(10, (gainValue / 20));
 		}
 
         // ..do something to the data...

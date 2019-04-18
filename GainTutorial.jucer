@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="Y0v8Yk" name="GainTutorial" projectType="audioplug" jucerVersion="5.4.3">
+<JUCERPROJECT id="Y0v8Yk" name="GainTutorial" projectType="audioplug" jucerVersion="5.4.3"
+              pluginVST3Category="Fx,Tools" pluginFormats="buildVST3" companyName="My Company">
   <MAINGROUP id="hh53Yj" name="GainTutorial">
     <GROUP id="{7F50D733-C593-46F3-B45F-3D245D40D99E}" name="Source">
       <FILE id="SbwqvY" name="MySliderLookAndFeel.cpp" compile="1" resource="0"

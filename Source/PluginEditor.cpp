@@ -22,11 +22,10 @@ GainTutorialAudioProcessorEditor::GainTutorialAudioProcessorEditor (GainTutorial
     setSize (200, 400);
 
 	gainSlider.setSliderStyle(Slider::SliderStyle::LinearVertical);
-	gainSlider.setRange(0.0, 1.0);
-	gainSlider.setValue(0.5);
+	gainSlider.setRange(-48.0, 0.0); // set for decibels where 0 is max volume - fixed in getTextFromVlaue and getValueFromText
+	gainSlider.setValue(-48.0);
 	gainSlider.setLookAndFeel(&sliderLookAndFeel);
 	gainSlider.addListener(this);
-
 	addAndMakeVisible(gainSlider);
 }
 
@@ -54,7 +53,7 @@ void GainTutorialAudioProcessorEditor::sliderValueChanged(Slider* slider)
 
 	if(slider == &gainSlider)
 	{
-		processor.rawVolume = slider->getValue();
+		processor.rawVolume = pow(10, (slider->getValue() / 20));
 	}
 }
 

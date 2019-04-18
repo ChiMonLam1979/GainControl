@@ -3,10 +3,10 @@
 <JUCERPROJECT id="Y0v8Yk" name="GainTutorial" projectType="audioplug" jucerVersion="5.4.3">
   <MAINGROUP id="hh53Yj" name="GainTutorial">
     <GROUP id="{7F50D733-C593-46F3-B45F-3D245D40D99E}" name="Source">
-      <FILE id="MngqLz" name="MySliderLookAndFeel.cpp" compile="1" resource="0"
-            file="../MidiDataProject/Source/LookAndFeel/MySliderLookAndFeel.cpp"/>
-      <FILE id="qUDClP" name="MySliderLookAndFeel.h" compile="0" resource="0"
-            file="../MidiDataProject/Source/LookAndFeel/MySliderLookAndFeel.h"/>
+      <FILE id="SbwqvY" name="MySliderLookAndFeel.cpp" compile="1" resource="0"
+            file="Source/MySliderLookAndFeel.cpp"/>
+      <FILE id="tW3NhZ" name="MySliderLookAndFeel.h" compile="0" resource="0"
+            file="Source/MySliderLookAndFeel.h"/>
       <FILE id="IWbYKn" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="iIdYEk" name="PluginProcessor.h" compile="0" resource="0"

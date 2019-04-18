@@ -33,7 +33,7 @@ void MySliderLookAndFeel::drawLinearSlider(
 		g.setColour(Colour(0x402d91b9));
 		g.fillRoundedRectangle(sliderInnerBorder, 1.0f);
 
-		Rectangle<float> sliderPath{ (sliderWidth * 0.5f) - (sliderPathWidth * 0.5f), sliderPos, sliderPathWidth, (minSliderPos - sliderPos) };
+		Rectangle<float> sliderPath{ (sliderWidth * 0.5f) - (sliderPathWidth * 0.5f), sliderPos, sliderPathWidth, ((height + maxSliderPos) - sliderPos) };
 		g.setColour(Colour(0x505ab9d8));
 		g.fillRoundedRectangle(sliderPath, 3.0f);
 
@@ -45,7 +45,7 @@ void MySliderLookAndFeel::drawLinearSlider(
 		{
 			auto number = i * 4;
 			g.setColour(Colour(0x60c8f0f9));
-			Rectangle<float> line{ (sliderWidth * 0.5f) - (sliderPathWidth * 0.5f * 0.4f), maxSliderPos - number * 1.0f, sliderPathWidth * 0.4f, 0.5f };
+			Rectangle<float> line{ (sliderWidth * 0.5f) - (sliderPathWidth * 0.5f * 0.4f), maxSliderPos - number * -1.0f, sliderPathWidth * 0.4f, 0.5f };
 			g.fillRect(line);
 		}
 	}

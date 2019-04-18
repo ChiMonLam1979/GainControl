@@ -28,10 +28,13 @@ GainTutorialAudioProcessor::GainTutorialAudioProcessor()
 {
 	NormalisableRange<float> gainRange{ -53.0f, 0.0f };
 	treeState.createAndAddParameter(GAIN_ID, GAIN_NAME, GAIN_NAME, gainRange, -53.0f, nullptr, nullptr);
+
+	treeState.state = ValueTree(GAIN_ID);
 }
 
 GainTutorialAudioProcessor::~GainTutorialAudioProcessor()
 {
+
 }
 
 //==============================================================================

@@ -33,6 +33,8 @@ GainTutorialAudioProcessorEditor::GainTutorialAudioProcessorEditor (GainTutorial
 
 GainTutorialAudioProcessorEditor::~GainTutorialAudioProcessorEditor()
 {
+	gainSlider.removeListener(this);
+	sliderAttach.~ScopedPointer();
 }
 
 //==============================================================================

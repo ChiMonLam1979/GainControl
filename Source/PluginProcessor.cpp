@@ -23,7 +23,7 @@ GainTutorialAudioProcessor::GainTutorialAudioProcessor()
                        .withOutput ("Output", AudioChannelSet::stereo(), true)
                      #endif
                        ),
-                      gainValue(-53.0f), treeState(*this, nullptr)
+                      gainValue(0.0f), treeState(*this, nullptr)
 #endif
 {
 	NormalisableRange<float> gainRange{ -53.0f, 0.0f };
@@ -165,7 +165,7 @@ void GainTutorialAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiB
 
 		for(int sample = 0; sample < buffer.getNumSamples(); ++sample)
 		{
-			channelData[sample] = buffer.getSample(channel, sample) * pow(10, (gainValue / 20));
+			channelData[sample] = buffer.getSample(channel, sample) * gainValue;
 		}
 
         // ..do something to the data...

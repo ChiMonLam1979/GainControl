@@ -22,9 +22,9 @@ AudioProcessorValueTreeState::ParameterLayout GainTutorialAudioProcessor::create
 {
 	std::vector <std::unique_ptr<RangedAudioParameter>> params;
 
-	NormalisableRange<float> range{ -52.0f, 0.0f };
+	NormalisableRange<float> range { -52.0f, 0.0f };
 
-	auto gainParam = std::make_unique<AudioParameterFloat>(GAIN_ID, GAIN_NAME, range, -15.0f);
+	auto gainParam = std::make_unique<AudioParameterFloat>(GAIN_ID, GAIN_NAME, range, -52.0f);
 
 	params.push_back(std::move(gainParam));
 
@@ -101,7 +101,7 @@ void GainTutorialAudioProcessor::prepareToPlay (double sampleRate, int samplesPe
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
-	previousGain = pow(10, gainValue.get() / 20);
+	previousGain = Decibels::decibelsToGain(gainValue.get());
 }
 
 void GainTutorialAudioProcessor::releaseResources()
@@ -140,7 +140,7 @@ void GainTutorialAudioProcessor::processBlock(AudioBuffer<float>& buffer, MidiBu
 	auto totalNumInputChannels = getTotalNumInputChannels();
 	auto totalNumOutputChannels = getTotalNumOutputChannels();
 
-	float currentGain = pow(10, gainValue.get() / 20);
+	float currentGain = Decibels::decibelsToGain(gainValue.get());
 
 	for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
 		buffer.clear(i, 0, buffer.getNumSamples());

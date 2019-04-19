@@ -22,7 +22,7 @@ AudioProcessorValueTreeState::ParameterLayout GainTutorialAudioProcessor::create
 {
 	std::vector <std::unique_ptr<RangedAudioParameter>> params;
 
-	NormalisableRange<float> range{ -48.0f, 0.0f };
+	NormalisableRange<float> range{ -52.0f, 0.0f };
 
 	auto gainParam = std::make_unique<AudioParameterFloat>(GAIN_ID, GAIN_NAME, range, -15.0f);
 
@@ -101,6 +101,7 @@ void GainTutorialAudioProcessor::prepareToPlay (double sampleRate, int samplesPe
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
+	previousGain = pow(10, gainValue.get() / 20);
 }
 
 void GainTutorialAudioProcessor::releaseResources()
@@ -133,38 +134,26 @@ bool GainTutorialAudioProcessor::isBusesLayoutSupported (const BusesLayout& layo
 }
 #endif
 
-void GainTutorialAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
+void GainTutorialAudioProcessor::processBlock(AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
 {
-    ScopedNoDenormals noDenormals;
-    auto totalNumInputChannels  = getTotalNumInputChannels();
-    auto totalNumOutputChannels = getTotalNumOutputChannels();
+	ScopedNoDenormals noDenormals;
+	auto totalNumInputChannels = getTotalNumInputChannels();
+	auto totalNumOutputChannels = getTotalNumOutputChannels();
 
-    // In case we have more outputs than inputs, this code clears any output
-    // channels that didn't contain input data, (because these aren't
-    // guaranteed to be empty - they may contain garbage).
-    // This is here to avoid people getting screaming feedback
-    // when they first compile a plugin, but obviously you don't need to keep
-    // this code if your algorithm always overwrites all the output channels.
-    for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
-        buffer.clear (i, 0, buffer.getNumSamples());
+	float currentGain = pow(10, gainValue.get() / 20);
 
-    // This is the place where you'd normally do the guts of your plugin's
-    // audio processing...
-    // Make sure to reset the state if your inner loop is processing
-    // the samples and the outer loop is handling the channels.
-    // Alternatively, you can process the samples with the channels
-    // interleaved by keeping the same state.
-    for (int channel = 0; channel < totalNumInputChannels; ++channel)
-    {
-        auto* channelData = buffer.getWritePointer (channel);
-		auto sliderGainValue = gainValue.get(); // *treeState.getRawParameterValue(GAIN_ID);
+	for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
+		buffer.clear(i, 0, buffer.getNumSamples());
 
-		for(int sample = 0; sample < buffer.getNumSamples(); ++sample)
-		{
-			channelData[sample] = buffer.getSample(channel, sample) * Decibels::decibelsToGain(sliderGainValue);
-		}
-        // ..do something to the data...
-    }
+	if (currentGain == previousGain)
+	{
+		buffer.applyGain(currentGain);
+	}
+	else
+	{
+		buffer.applyGainRamp(0, buffer.getNumSamples(), previousGain, currentGain);
+		previousGain = currentGain;
+	}
 }
 
 bool GainTutorialAudioProcessor::hasEditor() const

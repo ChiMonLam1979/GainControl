@@ -1,18 +1,7 @@
-/*
-  ==============================================================================
-
-    This file was auto-generated!
-
-    It contains the basic framework code for a JUCE plugin processor.
-
-  ==============================================================================
-*/
-
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
 
-//==============================================================================
 GainTutorialAudioProcessor::GainTutorialAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
      : AudioProcessor (BusesProperties()
@@ -23,13 +12,23 @@ GainTutorialAudioProcessor::GainTutorialAudioProcessor()
                        .withOutput ("Output", AudioChannelSet::stereo(), true)
                      #endif
                        ),
-                      gainValue(0.0f), treeState(*this, nullptr)
+	treeState(*this, nullptr, "PARAMETERS", createParameterLayout()), gainValue(*dynamic_cast<AudioParameterFloat*>(treeState.getParameter(GAIN_ID)))
 #endif
 {
-	NormalisableRange<float> gainRange{ -53.0f, 0.0f };
-	treeState.createAndAddParameter(GAIN_ID, GAIN_NAME, GAIN_NAME, gainRange, -53.0f, nullptr, nullptr);
-
 	treeState.state = ValueTree(GAIN_ID);
+}
+
+AudioProcessorValueTreeState::ParameterLayout GainTutorialAudioProcessor::createParameterLayout()
+{
+	std::vector <std::unique_ptr<RangedAudioParameter>> params;
+
+	NormalisableRange<float> range{ -48.0f, 0.0f };
+
+	auto gainParam = std::make_unique<AudioParameterFloat>(GAIN_ID, GAIN_NAME, range, -15.0f);
+
+	params.push_back(std::move(gainParam));
+
+	return { params.begin(), params.end() };
 }
 
 GainTutorialAudioProcessor::~GainTutorialAudioProcessor()
@@ -37,7 +36,6 @@ GainTutorialAudioProcessor::~GainTutorialAudioProcessor()
 
 }
 
-//==============================================================================
 const String GainTutorialAudioProcessor::getName() const
 {
     return JucePlugin_Name;
@@ -99,7 +97,6 @@ void GainTutorialAudioProcessor::changeProgramName (int index, const String& new
 {
 }
 
-//==============================================================================
 void GainTutorialAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
     // Use this method as the place to do any pre-playback
@@ -142,8 +139,6 @@ void GainTutorialAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiB
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
 
-	//rawVolume = 0.015;
-
     // In case we have more outputs than inputs, this code clears any output
     // channels that didn't contain input data, (because these aren't
     // guaranteed to be empty - they may contain garbage).
@@ -162,17 +157,16 @@ void GainTutorialAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiB
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
         auto* channelData = buffer.getWritePointer (channel);
+		auto sliderGainValue = gainValue.get(); // *treeState.getRawParameterValue(GAIN_ID);
 
 		for(int sample = 0; sample < buffer.getNumSamples(); ++sample)
 		{
-			channelData[sample] = buffer.getSample(channel, sample) * gainValue;
+			channelData[sample] = buffer.getSample(channel, sample) * Decibels::decibelsToGain(sliderGainValue);
 		}
-
         // ..do something to the data...
     }
 }
 
-//==============================================================================
 bool GainTutorialAudioProcessor::hasEditor() const
 {
     return true; // (change this to false if you choose to not supply an editor)
@@ -183,7 +177,6 @@ AudioProcessorEditor* GainTutorialAudioProcessor::createEditor()
     return new GainTutorialAudioProcessorEditor (*this);
 }
 
-//==============================================================================
 void GainTutorialAudioProcessor::getStateInformation (MemoryBlock& destData)
 {
     // You should use this method to store your parameters in the memory block.
@@ -197,8 +190,6 @@ void GainTutorialAudioProcessor::setStateInformation (const void* data, int size
     // whose contents will have been created by the getStateInformation() call.
 }
 
-//==============================================================================
-// This creates new instances of the plugin..
 AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
     return new GainTutorialAudioProcessor();

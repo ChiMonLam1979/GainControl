@@ -21,7 +21,7 @@ GainTutorialAudioProcessorEditor::GainTutorialAudioProcessorEditor (GainTutorial
 	setResizeLimits(50, 50, 800, 800);
     setSize (200, 400);
 
-	sliderAttach = new AudioProcessorValueTreeState::SliderAttachment(processor.treeState, GAIN_ID, gainSlider);
+	sliderAttach = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.treeState, GAIN_ID, gainSlider);
 
 	gainSlider.setSliderStyle(Slider::SliderStyle::LinearVertical);
 	gainSlider.setRange(-53.0, 0.0); // set for decibels where 0 is max volume - fixed in getTextFromVlaue and getValueFromText
@@ -34,7 +34,6 @@ GainTutorialAudioProcessorEditor::GainTutorialAudioProcessorEditor (GainTutorial
 GainTutorialAudioProcessorEditor::~GainTutorialAudioProcessorEditor()
 {
 	gainSlider.removeListener(this);
-	sliderAttach.~ScopedPointer();
 }
 
 //==============================================================================

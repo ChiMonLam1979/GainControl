@@ -42,7 +42,7 @@ public:
     void resized() override;
 	void sliderValueChanged(Slider* slider) override;
 
-	ScopedPointer<AudioProcessorValueTreeState::SliderAttachment> sliderAttach;
+	std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> sliderAttach;
 
 private:
     // This reference is provided as a quick way for your editor to

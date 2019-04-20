@@ -22,9 +22,9 @@ AudioProcessorValueTreeState::ParameterLayout GainTutorialAudioProcessor::create
 {
 	std::vector <std::unique_ptr<RangedAudioParameter>> params;
 
-	NormalisableRange<float> range { -52.0f, 0.0f };
+	NormalisableRange<float> range { Decibels::gainToDecibels(0.0f), Decibels::gainToDecibels(1.0f) };
 
-	auto gainParam = std::make_unique<AudioParameterFloat>(GAIN_ID, GAIN_NAME, range, -52.0f);
+	auto gainParam = std::make_unique<AudioParameterFloat>(GAIN_ID, GAIN_NAME, range, Decibels::gainToDecibels(0.0f));
 
 	params.push_back(std::move(gainParam));
 

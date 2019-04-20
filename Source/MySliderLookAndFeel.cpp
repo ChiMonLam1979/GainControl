@@ -74,7 +74,7 @@ Slider::SliderLayout MySliderLookAndFeel::getSliderLayout(Slider& slider)
 	Rectangle<float> labelRectangle{ xPos, yPos, width, localHeight };
 
 	g.setColour(Colour(0xff78c1de));
-	g.setFont(Font("Seven Segment","Regular", localHeight * 0.85f));
+	g.setFont(Font("Seven Segment", "Regular", localHeight * 0.45));
 	g.drawFittedText(label.getText(), xPos, yPos, width, localHeight, Justification::centred, 1, 0.0f);
 	g.setColour(Colour(0xff78c1de));
 	g.drawRoundedRectangle(labelRectangle, 5.0f, 2.0f);
